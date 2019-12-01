@@ -6,8 +6,8 @@ import math
 
 
 def check_available_spaces():
-    tickets = ParkingTicket.objects.filter(occupied=False)
-    return len(tickets)
+    tickets = ParkingTicket.objects.filter(occupied=True)
+    return 54 - len(tickets)
 
 
 def get_ticket(barcode):
