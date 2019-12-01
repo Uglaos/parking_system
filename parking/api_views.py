@@ -8,6 +8,8 @@ from .models import ParkingTicket
 from .serializers import ParkingTicketSerializer, ParkingTicketPriceSerializer
 
 import secrets
+from datetime import datetime
+from django.utils import timezone
 
 
 class ParkingTicketCreate(APIView):
@@ -35,3 +37,19 @@ class ParkingTicketPrice(APIView):
         ticket = self.get_ticket(barcode)
         serializer_class = ParkingTicketPriceSerializer(ticket)
         return Response(data=serializer_class.data, status=status.HTTP_200_OK)
+
+
+class ParkingTicketPayment(APIView):
+
+    def post(self, request, barcode):
+        payment_option = request.data.get('payment_option')
+        if payment_option is None:
+            raise ValidationError({'payment_option': 'Please enter your payment_option!'})
+        elif payment_option is not None and payment_option not in ['credit_card', 'debit_card', 'cash']:
+            raise ValidationError({'payment_option': 'Your payment_option must be credit_card, debit_card or cash!'})
+        ticket = ParkingTicketPrice.get_ticket(self, barcode)
+        ticket.payment_option = payment_option
+        ticket.paid = True
+        ticket.paid_time = timezone.now()
+        ticket.save()
+        return Response(data={'ticket': 'paid'}, status=status.HTTP_200_OK)

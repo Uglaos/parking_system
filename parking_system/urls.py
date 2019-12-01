@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/tickets', parking.api_views.ParkingTicketCreate.as_view()),
     path('api/tickets/<slug:barcode>', parking.api_views.ParkingTicketPrice.as_view()),
+    path('api/tickets/<slug:barcode>/payments', parking.api_views.ParkingTicketPayment.as_view()),
 ]
