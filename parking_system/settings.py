@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '1sq*9o)0!vxa=sxnq0fi1idp4e^x165z@7h09(+%r@0_(=e%jh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['vast-oasis-78204.herokuapp.com']
 

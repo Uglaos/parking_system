@@ -21,7 +21,7 @@ class ParkingTicketCreate(APIView):
         serializer_class = ParkingTicketSerializer(data=request.data)
         if serializer_class.is_valid(raise_exception=True):
             serializer_class.save(barcode=barcode, occupied=True)
-        return Response(data=serializer_class.data, status=status.HTTP_200_OK)
+        return Response(data=serializer_class.data, status=status.HTTP_201_CREATED)
 
 
 class ParkingTicketPrice(APIView):
