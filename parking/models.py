@@ -5,8 +5,8 @@ from rest_framework.exceptions import ValidationError
 import math
 
 
-def check_spaces():
-    tickets = ParkingTicket.objects.filter(occupied=True)
+def check_available_spaces():
+    tickets = ParkingTicket.objects.filter(occupied=False)
     return len(tickets)
 
 

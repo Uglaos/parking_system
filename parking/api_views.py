@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 
-from .models import ParkingTicket, check_spaces, get_ticket
+from .models import ParkingTicket, check_available_spaces, get_ticket
 from .serializers import ParkingTicketSerializer, ParkingTicketPriceSerializer
 
 import secrets
@@ -14,7 +14,7 @@ from django.utils import timezone
 class ParkingTicketCreate(APIView):
 
     def post(self, request):
-        if check_spaces() >= 54:
+        if check_available_spaces() < 1:
             raise ValidationError({'parking': 'Not enough parking spaces!'})
         barcode = secrets.token_hex(16)[0:16]
         request.data.update(barcode=barcode)
@@ -66,4 +66,4 @@ class ParkingTicketState(APIView):
 class ParkingSpaces(APIView):
 
     def get(self, request):
-        return Response(data={'spaces': check_spaces()})
+        return Response(data={'spaces': check_available_spaces()})
