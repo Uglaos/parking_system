@@ -20,7 +20,7 @@ class ParkingTicketCreate(APIView):
         request.data.update(barcode=barcode)
         serializer_class = ParkingTicketSerializer(data=request.data)
         if serializer_class.is_valid(raise_exception=True):
-            serializer_class.save(barcode=barcode)
+            serializer_class.save(barcode=barcode, occupied=True)
         return Response(data=serializer_class.data, status=status.HTTP_200_OK)
 
 
@@ -58,6 +58,8 @@ class ParkingTicketState(APIView):
             ticket.start_time = timezone.now()
             ticket.save()
         if ticket.paid:
+            ticket.occupied = False
+            ticket.save()
             return Response(data={'ticket': 'paid'}, status=status.HTTP_200_OK)
         else:
             return Response(data={'ticket': 'unpaid'}, status=status.HTTP_200_OK)
