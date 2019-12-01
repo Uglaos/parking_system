@@ -7,3 +7,10 @@ class ParkingTicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = ParkingTicket
         fields = ('barcode', )
+
+
+class ParkingTicketPriceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ParkingTicket
+        fields = ('ticket_price', )
