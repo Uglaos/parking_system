@@ -65,5 +65,5 @@ class ParkingTicketState(APIView):
 
 class ParkingSpaces(APIView):
 
-    def get(self):
+    def get(self, request):
         return Response(data={'spaces': check_spaces()})
