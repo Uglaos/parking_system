@@ -79,7 +79,11 @@ WSGI_APPLICATION = 'parking_system.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': 'd95hju8sompedb',
+        'USER': 'zrbebqxucxogwa',
+        'PASSWORD': '6a7f3759e1918439c380c3b753455165bfe1a989d3322dbd5a668af649a2fb4c',
+        'HOST': 'ec2-184-73-192-172.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
