@@ -53,3 +53,18 @@ class ParkingTicketPayment(APIView):
         ticket.paid_time = timezone.now()
         ticket.save()
         return Response(data={'ticket': 'paid'}, status=status.HTTP_200_OK)
+
+
+class ParkingTicketState(APIView):
+
+    def get(self, request, barcode):
+        ticket = ParkingTicketPrice.get_ticket(self, barcode)
+        diff = timezone.now() - ticket.paid_time
+        if diff.seconds/60 > 15:
+            ticket.paid = False
+            ticket.start_time = timezone.now()
+            ticket.save()
+        if ticket.paid:
+            return Response(data={'ticket': 'paid'}, status=status.HTTP_200_OK)
+        else:
+            return Response(data={'ticket': 'unpaid'}, status=status.HTTP_200_OK)
