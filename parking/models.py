@@ -10,7 +10,7 @@ def check_spaces():
     return len(tickets)
 
 
-def get_ticket(self, barcode):
+def get_ticket(barcode):
     if len(barcode) != 16:
         raise ValidationError({'barcode': 'Please enter valid barcode format!'})
     try:
