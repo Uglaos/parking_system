@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/tickets/<slug:barcode>', parking.api_views.ParkingTicketPrice.as_view()),
     path('api/tickets/<slug:barcode>/payments', parking.api_views.ParkingTicketPayment.as_view()),
     path('api/tickets/<slug:barcode>/state', parking.api_views.ParkingTicketState.as_view()),
+    path('api/free-spaces', parking.api_views.ParkingSpaces.as_view())
 ]

@@ -3,8 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 
-from .models import ParkingTicket
-
+from .models import ParkingTicket, check_spaces, get_ticket
 from .serializers import ParkingTicketSerializer, ParkingTicketPriceSerializer
 
 import secrets
@@ -15,6 +14,8 @@ from django.utils import timezone
 class ParkingTicketCreate(APIView):
 
     def post(self, request):
+        if check_spaces() >= 54:
+            raise ValidationError({'parking': 'Not enough parking spaces!'})
         barcode = secrets.token_hex(16)[0:16]
         request.data.update(barcode=barcode)
         serializer_class = ParkingTicketSerializer(data=request.data)
@@ -25,16 +26,8 @@ class ParkingTicketCreate(APIView):
 
 class ParkingTicketPrice(APIView):
 
-    def get_ticket(self, barcode):
-        if len(barcode) != 16:
-            raise ValidationError({'barcode': 'Please enter valid barcode format!'})
-        try:
-            return ParkingTicket.objects.get(barcode=barcode)
-        except ParkingTicket.DoesNotExist:
-            raise ValidationError({'barcode': 'Ticket with this barcode does not exist!'})
-
     def get(self, request, barcode):
-        ticket = self.get_ticket(barcode)
+        ticket = get_ticket(barcode)
         serializer_class = ParkingTicketPriceSerializer(ticket)
         return Response(data=serializer_class.data, status=status.HTTP_200_OK)
 
@@ -47,7 +40,7 @@ class ParkingTicketPayment(APIView):
             raise ValidationError({'payment_option': 'Please enter your payment_option!'})
         elif payment_option is not None and payment_option not in ['credit_card', 'debit_card', 'cash']:
             raise ValidationError({'payment_option': 'Your payment_option must be credit_card, debit_card or cash!'})
-        ticket = ParkingTicketPrice.get_ticket(self, barcode)
+        ticket = get_ticket(barcode)
         ticket.payment_option = payment_option
         ticket.paid = True
         ticket.paid_time = timezone.now()
@@ -58,7 +51,7 @@ class ParkingTicketPayment(APIView):
 class ParkingTicketState(APIView):
 
     def get(self, request, barcode):
-        ticket = ParkingTicketPrice.get_ticket(self, barcode)
+        ticket = get_ticket(barcode)
         diff = timezone.now() - ticket.paid_time
         if diff.seconds/60 > 15:
             ticket.paid = False
@@ -68,3 +61,9 @@ class ParkingTicketState(APIView):
             return Response(data={'ticket': 'paid'}, status=status.HTTP_200_OK)
         else:
             return Response(data={'ticket': 'unpaid'}, status=status.HTTP_200_OK)
+
+
+class ParkingSpaces(APIView):
+
+    def get(self):
+        return Response(data={'spaces': check_spaces()})
