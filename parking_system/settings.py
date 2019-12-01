@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'parking_system.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.db.backends.postgres',
         'NAME': 'd95hju8sompedb',
         'USER': 'zrbebqxucxogwa',
         'PASSWORD': '6a7f3759e1918439c380c3b753455165bfe1a989d3322dbd5a668af649a2fb4c',
